@@ -8,17 +8,35 @@ import MyPromise from "./promise.js";
 
 const promise = new MyPromise((resolve, reject) => {
   // resolve, reject交给用户使用，改变状态
-  setTimeout(() => {
-    resolve("success");
-    reject("reject");
-  }, 1000);
+  resolve("success");
 });
 
-promise.then(
-  (res) => {
-    console.log(res);
-  },
-  (err) => {
-    console.log(err);
-  }
-);
+promise
+  .then(
+    (res) => {
+      console.log(res);
+      return "hhh";
+    },
+    (err) => {
+      console.log(err);
+    }
+  )
+  .then(
+    (res) => {
+      console.log(res);
+      throw new Error();
+    },
+    (err) => {
+      console.log(err);
+    }
+  )
+  .then(
+    (res) => {
+      console.log(res);
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+
+console.log("sync code");
