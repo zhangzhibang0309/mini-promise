@@ -45,12 +45,12 @@ export default class Promise {
         break;
       case PENDING:
         // 注册、订阅
-        this.onReslovedCallbacks.push(() => {
+        this.onReslovedCallbacks.push((res) => {
           // TODO 可扩展
-          onFulfilled;
+          onFulfilled(res);
         });
-        this.onRejectedCallbacks.push(() => {
-          onRejected;
+        this.onRejectedCallbacks.push((err) => {
+          onRejected(err);
         });
         break;
     }
