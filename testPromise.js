@@ -8,37 +8,54 @@ import MyPromise from "./promise.js";
 
 const promise = new MyPromise((resolve, reject) => {
   // resolve, reject交给用户使用，改变状态
-  resolve("success");
+  // resolve("success");
+  reject("fail");
 });
 
+// 正常测试
+// promise
+//   .then(
+//     (res) => {
+//       console.log(res);
+//       return new MyPromise((resolve, reject) => {
+//         resolve("success2");
+//       });
+//     },
+//     (err) => {
+//       console.log(err);
+//       throw err;
+//     }
+//   )
+//   .then(
+//     (res) => {
+//       console.log(res);
+//       throw new Error();
+//     },
+//     (err) => {
+//       console.log(err);
+//       throw err;
+//     }
+//   )
+//   .then(
+//     (res) => {
+//       console.log(res);
+//     },
+//     (err) => {
+//       console.log(err);
+//       throw err;
+//     }
+//   );
+
+// 值的穿透测试
 promise
+  .then()
+  .then()
+  .then()
   .then(
     (res) => {
-      console.log(res);
-      return new MyPromise((resolve, reject) => {
-        resolve("success2");
-      });
+      console.log(res, "res");
     },
     (err) => {
-      console.log(err);
-    }
-  )
-  .then(
-    (res) => {
-      console.log(res);
-      throw new Error();
-    },
-    (err) => {
-      console.log(err);
-    }
-  )
-  .then(
-    (res) => {
-      console.log(res);
-    },
-    (err) => {
-      console.log(err);
+      console.log(err, "err");
     }
   );
-
-console.log("sync code");
