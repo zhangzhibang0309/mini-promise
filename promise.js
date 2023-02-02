@@ -2,7 +2,40 @@ const PENDING = "PENDING";
 const FULFILLED = "FULFILLED";
 const REJECTED = "REJECTED";
 
-function resolvePromise(promise2, x, resolve, reject) {}
+function resolvePromise(promise2, x, resolve, reject) {
+  if (promise2 === x) {
+    return reject(new TypeError("[TypeErrorL: Chaining cycle detected"));
+  }
+
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    let called = false;
+
+    try {
+      let then = x.then;
+      if (typeof then === "function") {
+        then.call(
+          x,
+          (res) => {
+            if (called) return;
+            called = true;
+            resolvePromise(promise2, res, resolve, reject);
+          },
+          (err) => {
+            if (called) return;
+            called = true;
+            reject(err);
+          }
+        );
+      }
+    } catch (err) {
+      if (called) return;
+      called = true;
+      reject(err);
+    }
+  } else {
+    resolve(x);
+  }
+}
 
 export default class Promise {
   constructor(exec) {
@@ -41,20 +74,20 @@ export default class Promise {
     let promise2 = new Promise((resolve, reject) => {
       if (this.status === FULFILLED) {
         process.nextTick(() => {
-        try {
-          let x = onFulfilled(this.res);
-          // 假设第二层promise成功 那么就调用resolve
-          // 但这里其实是有很多情况，所以封装成一个方法去判断
-          // 用x的值来判断promise2是成功还是失败
+          try {
+            let x = onFulfilled(this.res);
+            // 假设第二层promise成功 那么就调用resolve
+            // 但这里其实是有很多情况，所以封装成一个方法去判断
+            // 用x的值来判断promise2是成功还是失败
 
-          // 这里有个好奇怪的问题，你只要log promise2他就不会执行，十分诡异，promise2在这个时候还不存在，那也应该是undefined？？？
-          // 但是promise2直接用的话会报错，所以要搞个异步任务，让他的执行滞后
-          console.log(promise2, "====");
+            // 这里有个好奇怪的问题，你只要log promise2他就不会执行，十分诡异，promise2在这个时候还不存在，那也应该是undefined？？？
+            // 但是promise2直接用的话会报错，所以要搞个异步任务，让他的执行滞后
+            // console.log(promise2, "====");
 
-          resolvePromise(promise2, x, resolve, reject);
-        } catch (err) {
-          reject(err);
-        }
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (err) {
+            reject(err);
+          }
         });
       }
       if (this.status === REJECTED) {
