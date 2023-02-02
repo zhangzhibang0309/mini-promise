@@ -66,11 +66,21 @@ export default class Promise {
     try {
       exec(resolve, reject);
     } catch (err) {
-      console.log(err);
+      reject(err);
     }
   }
 
   then(onFulfilled, onRejected) {
+    // 值的穿透
+    onFulfilled =
+      typeof onFulfilled === "function" ? onFulfilled : (res) => res;
+    onRejected =
+      typeof onRejected === "function"
+        ? onRejected
+        : (err) => {
+            throw err;
+          };
+
     let promise2 = new Promise((resolve, reject) => {
       if (this.status === FULFILLED) {
         process.nextTick(() => {
@@ -119,7 +129,7 @@ export default class Promise {
               let x = onRejected(err);
               resolvePromise(promise2, x, resolve, reject);
             } catch (err) {
-              console.log(err);
+              reject(err)
             }
           });
         });
