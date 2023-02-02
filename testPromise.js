@@ -15,7 +15,9 @@ promise
   .then(
     (res) => {
       console.log(res);
-      return "hhh";
+      return new MyPromise((resolve, reject) => {
+        resolve("success2");
+      });
     },
     (err) => {
       console.log(err);
