@@ -4,7 +4,11 @@ const REJECTED = "REJECTED";
 
 function resolvePromise(promise2, x, resolve, reject) {
   if (promise2 === x) {
-    return reject(new TypeError("[TypeErrorL: Chaining cycle detected"));
+    return reject(
+      new TypeError(
+        "[TypeError: Chaining cycle detected for promise #<Promise>"
+      )
+    );
   }
 
   if ((typeof x === "object" && x !== null) || typeof x === "function") {
