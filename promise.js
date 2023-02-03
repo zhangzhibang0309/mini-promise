@@ -43,7 +43,7 @@ function resolvePromise(promise2, x, resolve, reject) {
   }
 }
 
-export default class Promise {
+class Promise {
   constructor(exec) {
     this.status = PENDING;
     this.res = undefined;
@@ -144,3 +144,15 @@ export default class Promise {
     return promise2;
   }
 }
+
+// 使用promises-aplus-tests进行promise-a-plus测试
+Promise.deferred = function () {
+  let dfd = {};
+  dfd.promise = new Promise((resolve, reject) => {
+    dfd.resolve = resolve;
+    dfd.reject = reject;
+  });
+  return dfd;
+};
+
+module.exports = Promise;
