@@ -26,6 +26,8 @@ function resolvePromise(promise2, x, resolve, reject) {
             reject(err);
           }
         );
+      } else {
+        resolve(x);
       }
     } catch (err) {
       if (called) return;
